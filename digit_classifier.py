@@ -1,7 +1,7 @@
 from neural_network import NeuralNetwork
 import numpy as np
 import pandas as pd
-from PIL import Image
+from matplotlib.pyplot import imshow
 
 
 def vectorize_labels(labels, vector_size):
@@ -35,8 +35,9 @@ def visualize_image(image_array, width, height):
     :param height:
     :return:
     """
+    %matplotlib inline
     image_array.shape = (width, height)
-    Image.fromarray(image_array.astype("uint8"), "L").show()
+    imshow(image_array, cmap='gray', vmin=0, vmax=255)
 
 
 def validate(net, test_set, test_set_labels):
