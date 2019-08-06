@@ -57,13 +57,9 @@ def validate(net, test_set, test_set_labels):
 
 # MAIN
 if __name__ == "__main__":
-
     # training
     data = pd.read_csv("./data/mnist_train.csv")
     training_data, training_labels = data.drop("label", 1).values, vectorize_labels(data["label"].values, 10)
-
-    #training_data = training_data[0:10000]
-    #training_labels = training_labels[0:10000]
 
     net = NeuralNetwork([784, 16, 16, 10])
     net.sgd(training_data, training_labels, epochs=50, learning_rate=0.3, mini_batch_size=32)
@@ -74,4 +70,4 @@ if __name__ == "__main__":
     test_data, test_labels = data2.drop("label", 1).values, data2["label"].values
 
     accuracy = validate(net, test_data, test_labels)
-    print("\nAccuracy: %.2f%%" % (accuracy*100))
+    print("\nAccuracy: %.2f%%" % (accuracy * 100))
