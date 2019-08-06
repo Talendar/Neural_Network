@@ -5,6 +5,7 @@
 import numpy as np
 import random
 import time
+#from IPython.display import clear_output  # required to clean the output when using notebooks
 
 
 class NeuralNetwork:
@@ -247,6 +248,7 @@ class NeuralNetwork:
                 h, m = divmod(m, 60)
 
                 print("\n"*50)
+                #clear_output()  # notebook
                 print("Epoch: %d/%d  %s  ETA: %02dh %02dmin %02ds"
                       "\nTotal loss/cost: %.6f"
                       % ((e+1), epochs, bar, h, m, s, self.costfunc(predictions)))
