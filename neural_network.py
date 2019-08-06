@@ -12,7 +12,7 @@ class NeuralNetwork:
 
     """
 
-    def __init__(self, layers_size=None, cost_type="mse"):
+    def __init__(self, layers_size=None, cost_type="mse", layers_activation="sigmoid"):
         """
         Constructor
         :param layers_size: list containing the sizes of the layers. The layers activation functions will be the default one.
@@ -23,7 +23,7 @@ class NeuralNetwork:
         if layers_size is not None:
             for s in layers_size:
                 input_count = self.layers[-1].size if len(self.layers) > 0 else 0
-                self.layers.append(NeuralLayer(s, input_count))
+                self.layers.append(NeuralLayer(s, input_count, layers_activation))
 
 
     def add_layer(self, size, activation="sigmoid"):
@@ -300,7 +300,11 @@ class NeuralLayer:
         :param z:
         :return:
         """
-        if self.activation == "sigmoid":
+        if self.activation.lower() == "sigmoid":
             return 1/(1 + np.exp(-z)) if not derivative else ( self.activate(z)*(1 - self.activate(z)) )
+        if self.activation.lower() == "relu":
+            return np.maximum(z, 0) if not derivative else np.ceil(np.clip(z, 0, 1))
+        if self.activation.lower() == "linear":
+            return z if not derivative else 1
 
         raise NameError("Activation function of the type \"%s\" is not defined!" % str(self.activation))
