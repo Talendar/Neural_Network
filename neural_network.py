@@ -5,12 +5,11 @@
 import numpy as np
 import random
 import time
-#from IPython.display import clear_output  # required to clean the output when using notebooks
+from IPython.display import clear_output  # required to clean the output when using notebooks
 
 
 class NeuralNetwork:
     """
-
     """
 
     def __init__(self, layers_size=None, cost_type="mse", layers_activation="sigmoid"):
@@ -29,7 +28,6 @@ class NeuralNetwork:
 
     def add_layer(self, size, activation="sigmoid"):
         """
-
         :param size:
         :param activation:
         :return:
@@ -46,7 +44,6 @@ class NeuralNetwork:
     def predict(self, x):
         """
         Feedforward.
-
         :param x: column vector containing the features of the sample. If an out of shape numpy array is fed, this function
         won't work properly due to errors in matrix multiplications.
         :return:
@@ -62,7 +59,6 @@ class NeuralNetwork:
     def costfunc_unit(self, h, y, derivative=False):
 
         """
-
         :param x:
         :param y:
         :param derivative:
@@ -79,7 +75,6 @@ class NeuralNetwork:
 
     def costfunc(self, data):
         """
-
         :param training_set:
         :param labels:
         :return:
@@ -112,7 +107,6 @@ class NeuralNetwork:
         for x, y in zip(training_set, labels):
             x, y = self.colvector(x), self.colvector(y)
             total += sum(self.costfunc_unit(self.predict(x), y))
-
         return total / len(training_set)"""
 
 
@@ -132,7 +126,6 @@ class NeuralNetwork:
 
     def generate_mini_batches(self, training_data, labels, mini_batch_size):
         """
-
         :param training_data:
         :param mini_batch_size_pc:
         :return:
@@ -149,7 +142,6 @@ class NeuralNetwork:
 
     def backpropagation(self, x, y):
         """
-
         :param x:
         :param y:
         :return: a tuple containing, respectively: the gradient of the cost function with respect to the weights; the
@@ -193,7 +185,6 @@ class NeuralNetwork:
 
     def numerical_derivative(self):
         """
-
         :return:
         """
         pass
@@ -202,7 +193,6 @@ class NeuralNetwork:
     def sgd(self, training_data, labels, epochs, learning_rate, mini_batch_size, verbose=True):
         """
         Fit the network's parameters to the training data using Stochastic Gradient Descent.
-
         :param training_data: numpy ndarray containing, in each row, all the samples of the training set (each row is a
         vector of the features representing one of the samples).
         :param labels: column vector, in the form of a numpy array of the appropriate shape, containing the labels with
@@ -247,16 +237,16 @@ class NeuralNetwork:
                 m, s = divmod(remaining_time, 60)
                 h, m = divmod(m, 60)
 
-                print("\n"*50)
-                #clear_output()  # notebook
+                #print("\n"*50)
+                cost = self.costfunc(predictions)
+                clear_output()  # notebook
                 print("Epoch: %d/%d  %s  ETA: %02dh %02dmin %02ds"
                       "\nTotal loss/cost: %.6f"
-                      % ((e+1), epochs, bar, h, m, s, self.costfunc(predictions)))
+                      % ((e+1), epochs, bar, h, m, s, cost))
 
 
     def save_params(self, file_name="./data/params.npz"):
         """
-
         :param file_name:
         :return:
         """
@@ -271,7 +261,6 @@ class NeuralNetwork:
 
     def load_params(self, file_name="./data/params.npz"):
         """
-
         :param file_name:
         :return:
         """
@@ -284,7 +273,6 @@ class NeuralNetwork:
 
 class NeuralLayer:
     """
-
     """
 
     def __init__(self, size, input_count, activation="sigmoid"):
@@ -298,7 +286,6 @@ class NeuralLayer:
 
     def activate(self, z, derivative=False):
         """
-
         :param z:
         :return:
         """
