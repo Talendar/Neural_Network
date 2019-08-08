@@ -193,6 +193,7 @@ class NeuralNetwork:
     def sgd(self, training_data, labels, epochs, learning_rate, mini_batch_size, verbose=True):
         """
         Fit the network's parameters to the training data using Stochastic Gradient Descent.
+        
         :param training_data: numpy ndarray containing, in each row, all the samples of the training set (each row is a
         vector of the features representing one of the samples).
         :param labels: column vector, in the form of a numpy array of the appropriate shape, containing the labels with
