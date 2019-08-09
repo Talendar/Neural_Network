@@ -64,7 +64,7 @@ class NeuralNetwork:
         :param derivative:
         :return:
         """
-        if self.cost_type == "mse":
+        if self.cost_type.lower() == "mse":
             if not derivative:
                 return ((h - y)**2)/2
             else:
@@ -96,7 +96,7 @@ class NeuralNetwork:
             predictions[i] = h.transpose()
             labels[i] = y.transpose()
 
-        if self.cost_type == "mse":
+        if self.cost_type.lower() == "mse":
             loss = np.sum( (predictions - labels)**2 ) / (2*m)
             return loss
 
@@ -109,7 +109,7 @@ class NeuralNetwork:
             total += sum(self.costfunc_unit(self.predict(x), y))
         return total / len(training_set)"""
 
-
+    
     def colvector(self, v):
         """
         Turn a numpy array into a column vector.
@@ -188,9 +188,27 @@ class NeuralNetwork:
         :return:
         """
         pass
+    
+    
+    def regularization_term(self, m, method, factor, derivative=False, w=None):
+        """
+        
+        """
+        if method.lower() == "l2":
+            if derivative:
+                return w*factor / m
+            else:
+                w_sum = 0
+                for l in self.layers:
+                    w_sum += np.sum(np.square(l.weights))
+                
+                return w_sum * factor / (2*m)
+    
+        raise NameError("Regularization method of the type \"%s\" is not defined!" % str(method))
 
 
-    def sgd(self, training_data, labels, epochs, learning_rate, mini_batch_size, verbose=True):
+    def sgd(self, training_data, labels, epochs, learning_rate, mini_batch_size, 
+            reg_method=None, reg_factor=0, verbose=True):
         """
         Fit the network's parameters to the training data using Stochastic Gradient Descent.
         
@@ -218,14 +236,17 @@ class NeuralNetwork:
                     predictions.append((h, y))
 
                     grad_w = [cur+var for cur, var in zip(grad_w, grad_w_variation)]
-                    grad_b = [cur+var for cur, var in zip(grad_b, grad_b_variation)]
+                    grad_b = [cur+var for cur, var in zip(grad_b, grad_b_variation)]              
 
                 # updating weights and bias
+                m = len(mini_batch_y)
                 for i in range(1, len(self.layers)):
                     l = self.layers[i]
-                    gw, gb = grad_w[i], grad_b[i]
-                    l.weights -= (learning_rate * gw) / len(mini_batch_y)
-                    l.bias -= (learning_rate * gb) / len(mini_batch_y)
+                    gw, gb = grad_w[i]/m, grad_b[i]/m
+                    
+                    l.bias -= (learning_rate * gb)
+                    reg_term = 0 if reg_method is None else self.regularization_term(m, reg_method, reg_factor, derivative=True, w=l.weights)
+                    l.weights -= learning_rate * (gw + reg_term)
 
             # print status
             if verbose:
@@ -238,9 +259,12 @@ class NeuralNetwork:
                 m, s = divmod(remaining_time, 60)
                 h, m = divmod(m, 60)
 
-                #print("\n"*50)
                 cost = self.costfunc(predictions)
-                clear_output()  # notebook
+                #cost_reg_term = 0 if reg_method is None else self.regularization_term(m, reg_method, reg_factor)
+                #cost = cost0 + cost_reg_term
+                
+                #print("\n"*50)
+                clear_output(wait=True)  # notebook
                 print("Epoch: %d/%d  %s  ETA: %02dh %02dmin %02ds"
                       "\nTotal loss/cost: %.6f"
                       % ((e+1), epochs, bar, h, m, s, cost))
